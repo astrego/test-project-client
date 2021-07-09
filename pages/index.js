@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 
-const Home = ({ restaurants, error }) => {
+export default function Home({ restaurants, error }) {
   return (
     <ul>
       {restaurants.map((restaurant) => (
@@ -12,9 +12,9 @@ const Home = ({ restaurants, error }) => {
       ))}
     </ul>
   );
-};
+}
 
-Home.getInitialProps = async (ctx) => {
+export async function getServerSideProps() {
   try {
     const parseJSON = (resp) => (resp.json ? resp.json() : resp);
 
@@ -42,10 +42,8 @@ Home.getInitialProps = async (ctx) => {
       .then(checkStatus)
       .then(parseJSON);
 
-    return { restaurants };
-  } catch (errro) {
-    return { error };
+    return { props: { restaurants } };
+  } catch (error) {
+    return { props: { error } };
   }
-};
-
-export default Home;
+}
